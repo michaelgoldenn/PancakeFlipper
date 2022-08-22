@@ -9,12 +9,12 @@ echo cooking UE project
 
 "%UnrealEngineLocation%\Engine\Binaries\Win64\UE4Editor-Cmd.exe" "%ProjectFolder%%ProjectFile%" -run=cook -targetplatform=WindowsNoEditor
 
-if %errorlevel% gtr 0 (
-	echo Error reported! Stopping bats
-	echo 
-	pause
-	exit
-)
+::if %errorlevel% gtr 0 (
+::	echo Error reported! Stopping bats
+::	echo 
+::	pause
+::	exit
+::)
 
 echo cooking complete
 

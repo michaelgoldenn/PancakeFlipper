@@ -7,11 +7,11 @@ cd ..
 
 call UtilityBats/MakeDefaultConfigFiles.bat NoPause
 call UtilityBats/LoadVars.bat
-call UtilityBats/VerifyVars.bat noPause
+call UtilityBats/VerifyVars.bat --noPause
 
-call CookUEProject.bat noPause
+call UtilityBats/CookUEProject.bat --noPause
 
-call PackageMod.bat noPause
+call UtilityBats/PackageMod.bat --noPause
 
 REM mkdir "%SteamInstall%\FSD\Mods\%ModName%"
 

@@ -5,9 +5,9 @@ rem Set active directory to main automation dir
 pushd %~dp0
 cd ..
 
-call UtilityBats/MakeDefaultConfigFiles.bat NoPause
+call UtilityBats/MakeDefaultConfigFiles.bat --noPause
 call UtilityBats/LoadVars.bat
-call UtilityBats/VerifyVars.bat noPause
+call UtilityBats/VerifyVars.bat --noPause
 
 ::If verbose is enabled, -v will be added to tar and curl commands
 if /I %Verbose%==true (
@@ -15,7 +15,6 @@ if /I %Verbose%==true (
 ) else (
 	set VerboseParam=
 )
-
 
 ::If called from ModIOQuickTestMod.bat, use pak in .\Temp
 if "%2"=="UseTempPak" (
@@ -28,12 +27,13 @@ set Version=%MajorVersion%^.%MinorVersion%
 
 if /I %AddVersionToModName%==true (
 	copy %PakLocation%\%ModName%.pak %cd%\Temp\%ModName%%Version%.pak
+	set OldModName=ModName
 	set ModName=%ModName%%Version%
 	set PakLocation="%cd%\Temp"
 )
 
-call CopyWhitelistedFiles.bat noPause
-call StripBlacklistedFiles.bat noPause
+call UtilityBats/CopyWhitelistedFiles.bat --noPause
+call UtilityBats/StripBlacklistedFiles.bat --noPause
 
 ::Deletes old files and sets the new zip name to save
 del %LastZip%
@@ -41,17 +41,17 @@ del %LastPak%
 
 ::Saves paths to old files to delete next run
 call :SaveToConfig SaveLastZip "%ZipLocation%\%ModName%.zip"
-call :SaveToConfig SaveLastPak "%cd%\Temp\%ModName%.pak"
+call :SaveToConfig SaveLastPak "%cd%\Temp\%OldModName%.pak"
 
 ::creates zip with pak inside to upload to mod.io
-tar %VerboseParam% -acf "%ZipLocation%\%ModName%.zip" -C %PakLocation% %ModName%.pak
+tar -acf "%ZipLocation%\%ModName%.zip" %PakLocation%\%ModName%.pak
 
 ::checks if tar returned an error
 if not %errorlevel%==0 (
 	if /I %Verbose%==true (
 		echo tar.exe exited with code %errorlevel%, aborting
 	) else (
-		echo echo tar.exe exited with code %errorlevel%, aborting ^(try enabling verbose in ModIOConfig^.ini for more info^)
+		echo tar.exe exited with code %errorlevel%, aborting ^(try enabling verbose in ModIOConfig^.ini for more info^)
 	)
 	pause
 	exit /b 2
@@ -91,8 +91,8 @@ if /I %AutoIncrementVersion%==true (
 ::Saves new minor version
 call :SaveToConfig SaveMinorVersion
 
-::Pauses unless called from another script using the noPause argument
-if not "%1"=="noPause" (
+::Pauses unless called from another script using the --noPause argument
+if not "%1"=="--noPause" (
 	pause
 )
 

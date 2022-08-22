@@ -10,7 +10,7 @@ rmdir Temp\PackageInput /s /q
 mkdir Temp\PackageInput\Content
 
 for /F "tokens=*" %%g in (Configs/PakWhiteList.ini) do (
-    if exist "%ProjectFolder%\Saved\Cooked\WindowsNoEditor\%ProjectName%\Content\%%g\" (
+    if exist "%ProjectFolder%\Saved\Cooked\WindowsNoEditor\%ProjectName%\Content\%%g\*" (
         echo copying folder %%g
         robocopy "%ProjectFolder%\Saved\Cooked\WindowsNoEditor\%ProjectName%\Content\%%g" "Temp\PackageInput\Content\%%g" /MIR /ns /nc /nfl /ndl /np /njh /njs
     ) else if exist "%ProjectFolder%\Saved\Cooked\WindowsNoEditor\%ProjectName%\Content\%%g" (
